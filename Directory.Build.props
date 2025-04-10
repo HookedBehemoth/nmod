@@ -1,0 +1,209 @@
+<Project>
+    <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+        <VRChatPath>C:\Program Files (x86)\Steam\steamapps\common\VRChat</VRChatPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(OS)' == 'Unix' ">
+        <VRChatPath>$(HOME)/.steam/steam/steamapps/common/VRChat</VRChatPath>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+
+        <AssemblySearchPaths>
+            {RawFileName};
+            $(VRChatPath)/Mods;
+            $(VRChatPath)/BepInEx/core;
+            $(VRChatPath)/BepInEx/interop;
+            $(VRChatPath)/BepInEx/unity-libs
+        </AssemblySearchPaths>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="0Harmony">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <!-- Mod libraries -->
+        <Reference Include="ActionMenuApi">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <!-- Il2Cpp -->
+        <Reference Include="Il2Cppmscorlib">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Il2CppSystem">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Il2CppSystem.Core">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Il2CppSystem.Runtime">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Il2Cpp">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Il2CppInterop.Common">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Il2CppInterop.Runtime">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Il2CppInterop.HarmonySupport">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="VRC.Udon.Common">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="VRC.Udon.VRCWrapperModules">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="VRC.Udon.Wrapper">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="VRC.Udon">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <!-- Game assemblies -->
+        <Reference Include="Assembly-CSharp">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="DataModel">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="VRCSDKBase">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="VRCSDK2">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="VRCSDK3">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="VRCSDK3A">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="VRCCore-Standalone">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="VRCCore-Editor">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="VRCEconomy">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Localization.LocalizableString">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <!-- Unity -->
+        <Reference Include="UnityEngine.CoreModule">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="UnityEngine.UI">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="UnityEngine.IMGUIModule">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="UnityEngine.AnimationModule">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="UnityEngine.PhysicsModule">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="UnityEngine.ParticleSystemModule">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="UnityEngine.InputLegacyModule">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="UnityEngine.AnimationModule">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="UnityEngine.VRModule">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="UnityEngine.XRModule">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="UnityEngine.SubsystemsModule">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Unity.Postprocessing.Runtime">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Unity.TextMeshPro">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="VRC.UI.Shared">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="VRC.UI.Elements">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Il2CppDataModel">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Il2CppLocalization.LocalizableString">
+            <Private>False</Private>
+            <SpecificVersion>False</SpecificVersion>
+        </Reference>
+    </ItemGroup>
+    
+    <PropertyGroup>
+        <OutputPath>$(MsBuildThisFileDirectory)\Output\$(Configuration)\</OutputPath>
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
+    <Target Name="PostClean" AfterTargets="Clean">
+        <RemoveDir Directories="$(MsBuildThisFileDirectory)\Output"/>
+        <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
+        <RemoveDir Directories="$(BaseOutputPath)" />
+    </Target>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="Exists('$(VRChatPath)')">
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(VRChatPath)\BepInEx\plugins" />
+        <Message Text="Copied $(TargetFileName) to $(VRChatPath)\plugins" Importance="high" />
+    </Target>
+</Project>
