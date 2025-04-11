@@ -18,35 +18,24 @@ using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using UnityEngine;
 using BepInEx.Configuration;
 
-// using MelonLoader;
-// using UnityEngine;
+using UnityEngine;
 using UnityEngine.Events;
-// using Il2CppVRC.SDKBase;
-using VRC.SDKBase;
 using UnityEngine.XR;
 
-// using ActionMenuDriver = Il2Cpp.MonoBehaviourPublicObGaObAc1ObAcBoCoObUnique;
+using VRC.Core;
+using VRC.SDKBase;
+
 using ActionMenuDriver = MonoBehaviourPublicObGaObAc1ObAcBoCoObUnique;
-// using ActionMenuOpener = Il2Cpp.MonoBehaviourPublicSiObSiCaBoSiAcObBo1Unique;
 using ActionMenuOpener = MonoBehaviourPublicSiObSiCaBoSiAcObBo1Unique;
-// using ActionMenuType = Il2Cpp.MonoBehaviourPublicSiObSiCaBoSiAcObBo1Unique.EnumNPublicSealedvaLeRi3vUnique;
 using ActionMenuType = MonoBehaviourPublicSiObSiCaBoSiAcObBo1Unique.EnumNPublicSealedvaLeRi3vUnique;
-// using SelectedOutline = Il2Cpp.MonoBehaviourPublicInLi1MeHaInMeRe1MeUnique;
 using SelectedOutline = MonoBehaviourPublicInLi1MeHaInMeRe1MeUnique;
-// using RoomManager = Il2Cpp.MonoBehaviourPublicBoApSiApBoObStApBo1Unique;
 using RoomManager = MonoBehaviourPublicBoApSiApBoObStApBo1Unique;
 using Il2CppSystem.Collections.Generic;
-// using VRCMotionState = Il2Cpp.MonoBehaviourPublicLaSiBoSiChBoObVeBoSiUnique;
 using VRCMotionState = MonoBehaviourPublicLaSiBoSiChBoObVeBoSiUnique;
-using Il2CppSystem.Runtime.InteropServices;
+using TextMeshProText = TextMeshProUGUIPublicLo_lLa_c1InLoStInLoUnique;
 using UnityEngine.Playables;
-using TMPro;
-
-// [assembly: MelonInfo(typeof(VM), "nmod", "1.0.0", "Im gay", null)]
-// [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace NMod;
 
@@ -319,15 +308,15 @@ public class PluginComponent : MonoBehaviour
         CreateButton("Murder", LeftExploreMenu, CreateMurderMenu);
         CreateButton("Sticky Stuckle", LeftExploreMenu, CreateStickyMenu);
         CreateButton("Pickups", LeftExploreMenu, CreatePickupMenu);
-        CreateButton("Toggles (WIP)", LeftExploreMenu, TogglesMenu);
+        CreateButton("Toggles", LeftExploreMenu, TogglesMenu);
 
         //Useless fluff at the bottom so we don't stop execution if the game gets updated and shit breaks
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProUGUIPublicLo_lLa_c1InLoStInLoUnique>().prop_String_0 = VM.menuText.Value + " " + MyPluginInfo.PLUGIN_VERSION;
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProUGUIPublicLo_lLa_c1InLoStInLoUnique>().color = new Color(255, 0, 0, 255);
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/Explore/WngHeader_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProUGUIPublicLo_lLa_c1InLoStInLoUnique>().prop_String_0 = "Teleport";
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Explore/Container/Text_QM_H3").GetComponent<TextMeshProUGUIPublicLo_lLa_c1InLoStInLoUnique>().prop_String_0 = "Teleport";
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Left/Container/InnerContainer/Explore/WngHeader_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProUGUIPublicLo_lLa_c1InLoStInLoUnique>().prop_String_0 = "Elite Hacks";
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Left/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Explore/Container/Text_QM_H3").GetComponent<TextMeshProUGUIPublicLo_lLa_c1InLoStInLoUnique>().prop_String_0 = "Elite Hacks";
+        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = VM.menuText.Value + " " + MyPluginInfo.PLUGIN_VERSION;
+        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().color = new Color(255, 0, 0, 255);
+        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/Explore/WngHeader_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = "Teleport";
+        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Explore/Container/Text_QM_H3").GetComponent<TextMeshProText>().prop_String_0 = "Teleport";
+        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Left/Container/InnerContainer/Explore/WngHeader_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = "Elite Hacks";
+        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Left/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Explore/Container/Text_QM_H3").GetComponent<TextMeshProText>().prop_String_0 = "Elite Hacks";
         //Big menu wings are stupid and useless and I'm not adding buttons to the menus twice
         GameObject.Find("Canvas_MainMenu(Clone)/Container/Wing_Right").active = false;
         GameObject.Find("Canvas_MainMenu(Clone)/Container/Wing_Left").active = false;
@@ -412,12 +401,42 @@ public class PluginComponent : MonoBehaviour
                         var ourAnimator = GameObject.Find(player.gameObject.name + "/ForwardDirection/Avatar").GetComponentsInChildren<Animator>();
                         ourAnimator[0].enabled = !ourAnimator[0].enabled;
                     });
+                    CreateButton("Meshes", LeftExploreMenu, () =>
+                    {
+                        CreateMeshToggleMenu(LeftExploreMenu, player);
+                    });
+                    CreateButton("Blendshapes (WIP)", LeftExploreMenu, () =>
+                    {
+                        ClearMenu(LeftExploreMenu);
+                        CreateButton("Back", LeftExploreMenu, TogglesMenu);
+                        var ourSkinnedMeshes = GameObject.Find(player.gameObject.name + "/ForwardDirection/Avatar").GetComponentsInChildren<SkinnedMeshRenderer>(true);
+                        foreach (var skinnedMesh in ourSkinnedMeshes)
+                        {
+                            if (skinnedMesh.GetComponent<SkinnedMeshRenderer>().sharedMesh.blendShapeCount > 0) {
+                                CreateButton(skinnedMesh.name, LeftExploreMenu, () =>
+                                {
+                                    ClearMenu(LeftExploreMenu);
+                                    CreateButton("Back", LeftExploreMenu, TogglesMenu);
+                                    CreateSeparator(LeftExploreMenu);
+                                    var skinnedMeshRenderer = skinnedMesh.GetComponent<SkinnedMeshRenderer>();
+                                    for (int i = 0; i <= skinnedMeshRenderer.sharedMesh.blendShapeCount - 1; i++) {
+                                        CreateButton(skinnedMeshRenderer.sharedMesh.GetBlendShapeName(i) + " (" + skinnedMeshRenderer.GetBlendShapeWeight(i) + ")", LeftExploreMenu, () =>
+                                        {
+                                            // Behemoth, why doesn't this work but the same thing works fine in unityexplorer??
+                                            skinnedMeshRenderer.SetBlendShapeWeight(i,100f);
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
                     CreateButton("Parameters (WIP)", LeftExploreMenu, () =>
                     {
                         ClearMenu(LeftExploreMenu);
                         CreateButton("Back", LeftExploreMenu, TogglesMenu);
                         CreateSeparator(LeftExploreMenu);
                         var playerGameobject = GameObject.Find(player.gameObject.name + "/ForwardDirection");
+                        CreateSeparator(LeftExploreMenu, "--- Bool ---");
                         for (int i = 0; i <= playerGameobject.GetComponentsInChildren<VRC.SDK3.Avatars.Components.VRCAvatarDescriptor>()[0].GetExpressionParameterCount() - 1; i++) {   
                             var ourParameter = playerGameobject.GetComponentsInChildren<VRC.SDK3.Avatars.Components.VRCAvatarDescriptor>()[0].GetExpressionParameter(i);
                             if (ourParameter.valueType == VRC.SDK3.Avatars.ScriptableObjects.VRCExpressionParameters.ValueType.Bool) {
@@ -438,31 +457,76 @@ public class PluginComponent : MonoBehaviour
                             }
                         }
                     });
-                    CreateButton("Meshes", LeftExploreMenu, () =>
-                    {
-                        ClearMenu(LeftExploreMenu);
-                        CreateButton("Back", LeftExploreMenu, TogglesMenu);
-                        CreateSeparator(LeftExploreMenu);
-                        foreach (var skinnedMesh in GameObject.Find(player.gameObject.name + "/ForwardDirection/Avatar").GetComponentsInChildren<SkinnedMeshRenderer>(true))
-                        {
-                            CreateButton(skinnedMesh.gameObject.name + " (" + skinnedMesh.gameObject.active + ")", LeftExploreMenu, () =>
-                            {
-                                skinnedMesh.gameObject.SetActive(!skinnedMesh.gameObject.active);
-                            });
-                        }
-                        foreach (var mesh in GameObject.Find(player.gameObject.name + "/ForwardDirection/Avatar").GetComponentsInChildren<MeshRenderer>(true))
-                        {
-                            CreateButton(mesh.gameObject.name + " (" + mesh.gameObject.active + ")", LeftExploreMenu, () =>
-                            {
-                                mesh.gameObject.SetActive(!mesh.gameObject.active);
-                                // doesn't do mirror objects, yet!!
-                            });
-                        }
-                    });
                 });
             }
         }
 
+    }
+    public static void CreateMeshToggleMenu(GameObject LeftExploreMenu, VRCPlayerApi player, string removeThisButton = null)
+    {
+        ClearMenu(LeftExploreMenu);
+        CreateButton("Back", LeftExploreMenu, TogglesMenu);
+        CreateSeparator(LeftExploreMenu, "--- SkinnedMeshes ---");
+
+        var ourSkinnedMeshes = GameObject.Find(player.gameObject.name + "/ForwardDirection/Avatar").GetComponentsInChildren<SkinnedMeshRenderer>(true);
+        var ourMeshes = GameObject.Find(player.gameObject.name + "/ForwardDirection/Avatar").GetComponentsInChildren<MeshRenderer>(true);
+        var skinnedMeshNames = new List<string>();
+        var meshNames = new List<string>();
+        foreach (var skinnedMesh in ourSkinnedMeshes)
+        {
+            skinnedMeshNames.Add(skinnedMesh.gameObject.name);
+        }
+        foreach (var mesh in ourMeshes)
+        {
+            meshNames.Add(mesh.gameObject.name);
+        }
+        skinnedMeshNames.Sort();
+        for (int i = 0; i <= skinnedMeshNames.Count - 1; i++) {
+            foreach (var skinnedMesh in ourSkinnedMeshes)
+            {
+                if (skinnedMesh.gameObject.name == skinnedMeshNames[i] && skinnedMesh.gameObject.name != removeThisButton)
+                {
+                    CreateMeshToggleButton(LeftExploreMenu, skinnedMesh.gameObject, player);
+                }
+            }
+        }
+        meshNames.Sort();
+        CreateSeparator(LeftExploreMenu, "--- Meshes ---");
+        for (int i = 0; i <= meshNames.Count - 1; i++) {
+            foreach (var mesh in ourMeshes)
+            {
+                if (mesh.gameObject.name == meshNames[i] && mesh.gameObject.name != removeThisButton)
+                {
+                    CreateMeshToggleButton(LeftExploreMenu, mesh.gameObject, player);
+                }
+            }
+        }
+    }
+    public static void CreateMeshToggleButton(GameObject LeftExploreMenu, GameObject mesh, VRCPlayerApi player)
+    {
+        string uniqueID = "_8675309"; //so unique :)
+        string ignoreID = "3298479235"; //CHICKEN JOCKEY!
+        CreateButton(mesh.name + " (" + mesh.active + ")", LeftExploreMenu, () =>
+        {
+            var hiddenObject =  GameObject.Find(mesh.transform.parent.GetHierarchyPath());
+            if (hiddenObject.name == mesh.name + uniqueID) {
+                mesh.active = !hiddenObject.active;
+                hiddenObject.active = !hiddenObject.active;
+                CreateMeshToggleMenu(LeftExploreMenu, player);
+                return;
+            }
+            GameObject MeshHider = new GameObject();
+            MeshHider.name = mesh.name + uniqueID;
+            MeshHider.transform.parent = GameObject.Find(mesh.transform.GetHierarchyPath()).transform.parent;
+            GameObject newMesh = GameObject.Instantiate(mesh);
+            newMesh.name = mesh.name;
+            mesh.name = ignoreID; //destroying the game object doesn't instantly remove it unfortunately
+            GameObject.Destroy(mesh, 0);
+            newMesh.transform.parent = MeshHider.transform;
+            MeshHider.active = !newMesh.active;
+            newMesh.active = !newMesh.active;
+            CreateMeshToggleMenu(LeftExploreMenu, player, ignoreID);
+        });
     }
     public static void CreatePickupMenu()
     {
@@ -708,7 +772,7 @@ public class PluginComponent : MonoBehaviour
         myButton.transform.SetParent(ButtonParent.transform, false);
         myButton.GetComponent<MonoBehaviourPublicLi1ObUnique>().enabled = false; //prevents the button from opening home menu dialog
         GameObject.Find(myButton.name + "/Icons").active = false; //remove icon
-        GameObject.Find(myButton.name + "TextLayoutParent/Text_H4").GetComponent<TextMeshProUGUIPublicLo_lLa_c1InLoStInLoUnique>().prop_String_0 = buttonName;
+        GameObject.Find(myButton.name + "TextLayoutParent/Text_H4").GetComponent<TextMeshProText>().prop_String_0 = buttonName;
         var ev = new UnityEngine.UI.Button.ButtonClickedEvent();
         var cb = (UnityAction)(System.Action)(() => buttonAction());
         ev.AddListener(cb);
@@ -720,7 +784,7 @@ public class PluginComponent : MonoBehaviour
         GameObject mySeparator = GameObject.Instantiate(GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/Avatars/Panel_Wing_ScrollRect_Labeled_Grid/Viewport/VerticalLayoutGroup/Header_Wing_H3"));
         mySeparator.name = "Separator_" + System.Guid.NewGuid().ToString(); //Name the separators something specific internally
         mySeparator.transform.SetParent(Parent.transform, false);
-        GameObject.Find(mySeparator.name + "Text_H3").GetComponent<TextMeshProUGUIPublicLo_lLa_c1InLoStInLoUnique>().prop_String_0 = text;
+        GameObject.Find(mySeparator.name + "Text_H3").GetComponent<TextMeshProText>().prop_String_0 = text;
         return mySeparator;
     }
     public static List<VRCPlayerApi> GetPlayersSorted()
