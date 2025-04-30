@@ -119,12 +119,10 @@ public class PluginComponent : MonoBehaviour
             }
         }
 
-        // private static MonoBehaviour1PublicOb_pOb_s_pBoGaOb_pStUnique LocalPlayer
         private static MonoBehaviour1PublicOb_pOb_sBo_p_sGaObStUnique LocalPlayer
         {
             get
             {
-                // return MonoBehaviour1PublicOb_pOb_s_pBoGaOb_pStUnique.field_Internal_Static_MonoBehaviour1PublicOb_pOb_s_pBoGaOb_pStUnique_0;
                 return MonoBehaviour1PublicOb_pOb_sBo_p_sGaObStUnique.field_Internal_Static_MonoBehaviour1PublicOb_pOb_sBo_p_sGaObStUnique_0;
             }
         }
@@ -772,8 +770,7 @@ public class PluginComponent : MonoBehaviour
         GameObject myButton = GameObject.Instantiate(GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions/Button_GoHome"));
         myButton.name = "Button_" + System.Guid.NewGuid().ToString(); //Name the buttons something specific internally
         myButton.transform.SetParent(ButtonParent.transform, false);
-        // myButton.GetComponent<MonoBehaviourPublicLi1ObUnique>().enabled = false; //prevents the button from opening home menu dialog
-        myButton.GetComponent<MonoBehaviourPublicLi193OnVoOb80BoVoOnUnique>().enabled = false;
+        myButton.GetComponent<MonoBehaviourPublicLi193OnVoOb80BoVoOnUnique>().enabled = false; //prevents the button from opening home menu dialog
         GameObject.Find(myButton.name + "/Icons").active = false; //remove icon
         GameObject.Find(myButton.name + "TextLayoutParent/Text_H4").GetComponent<TextMeshProText>().prop_String_0 = buttonName;
         var ev = new UnityEngine.UI.Button.ButtonClickedEvent();
