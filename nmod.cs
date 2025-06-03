@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
@@ -45,6 +46,7 @@ public class PluginComponent : MonoBehaviour
     {
         VM.Logger.LogInfo("NMod loaded!");
         StartCoroutine(WaitForUiManager().WrapToIl2Cpp());
+        StartCoroutine(SpamPropsOnPlayer().WrapToIl2Cpp());
     }
 
     public void Update()
@@ -106,6 +108,8 @@ public class PluginComponent : MonoBehaviour
         private static Vector3 originalGravity;
         public static VRCPlayerApi stuckPlayer = null;
         public static int stuckPlayerPos = 0;
+        public static bool propSpam = false;
+        public static VRCPlayerApi spammedPlayer = null;
 
         public static bool NoclipEnabled
         {
@@ -290,6 +294,24 @@ public class PluginComponent : MonoBehaviour
 
         CreateMainMenu();
     }
+    private static System.Collections.IEnumerator SpamPropsOnPlayer()
+    {
+        while (true) {
+            if (Flight.propSpam && Flight.spammedPlayer != null)
+            {
+                try {
+                    TeleportPickups(Flight.spammedPlayer);
+                }
+                catch {
+                    Flight.stuckPlayerPos = 0;
+                    Flight.propSpam = false;
+                }
+                yield return new WaitForSeconds(0.25f);
+            } else {
+                yield return new WaitForSeconds(1f);
+            }
+        }
+    }
     public static void CreateMainMenu()
     {
         //TELEPORT
@@ -311,7 +333,7 @@ public class PluginComponent : MonoBehaviour
         CreateButton("Toggles", LeftExploreMenu, TogglesMenu);
 
         //Useless fluff at the bottom so we don't stop execution if the game gets updated and shit breaks
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = VM.menuText.Value + " " + MyPluginInfo.PLUGIN_VERSION;
+        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = VM.menuText.Value + " v" + MyPluginInfo.PLUGIN_VERSION;
         GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().color = new Color(255, 0, 0, 255);
         GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/Explore/WngHeader_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = "Teleport";
         GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Explore/Container/Text_QM_H3").GetComponent<TextMeshProText>().prop_String_0 = "Teleport";
@@ -386,6 +408,7 @@ public class PluginComponent : MonoBehaviour
         GameObject LeftExploreMenu = GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Left/Container/InnerContainer/Explore/ScrollRect/Viewport/VerticalLayoutGroup");
         ClearMenu(LeftExploreMenu);
         CreateButton("Back", LeftExploreMenu, CreateMainMenu);
+        CreateButton("Auto-Sex All", LeftExploreMenu, () => {AutoMeshToggle();});
         CreateButton("Reload Player List", LeftExploreMenu, TogglesMenu);
         CreateSeparator(LeftExploreMenu);
         var self = VRCPlayerApi.AllPlayers.Find((Il2CppSystem.Predicate<VRCPlayerApi>)(x => x.isLocal));
@@ -466,7 +489,8 @@ public class PluginComponent : MonoBehaviour
     {
         ClearMenu(LeftExploreMenu);
         CreateButton("Back", LeftExploreMenu, TogglesMenu);
-        CreateSeparator(LeftExploreMenu, "--- SkinnedMeshes ---");
+        CreateButton("Auto-Sex", LeftExploreMenu, () => {AutoMeshToggle(player.displayName);});
+        CreateSeparator(LeftExploreMenu, "- SkinnedMeshes -");
 
         var ourSkinnedMeshes = GameObject.Find(player.gameObject.name + "/ForwardDirection/Avatar").GetComponentsInChildren<SkinnedMeshRenderer>(true);
         var ourMeshes = GameObject.Find(player.gameObject.name + "/ForwardDirection/Avatar").GetComponentsInChildren<MeshRenderer>(true);
@@ -504,73 +528,153 @@ public class PluginComponent : MonoBehaviour
     }
     public static void CreateMeshToggleButton(GameObject LeftExploreMenu, GameObject mesh, VRCPlayerApi player)
     {
-        string uniqueID = "_8675309"; //so unique :)
         string ignoreID = "3298479235"; //CHICKEN JOCKEY!
         CreateButton(mesh.name + " (" + mesh.active + ")", LeftExploreMenu, () =>
         {
-            var hiddenObject =  GameObject.Find(mesh.transform.parent.GetHierarchyPath());
-            if (hiddenObject.name == mesh.name + uniqueID) {
-                mesh.active = !hiddenObject.active;
-                hiddenObject.active = !hiddenObject.active;
-                CreateMeshToggleMenu(LeftExploreMenu, player);
-                return;
-            }
-            GameObject MeshHider = new GameObject();
-            MeshHider.name = mesh.name + uniqueID;
-            MeshHider.transform.parent = GameObject.Find(mesh.transform.GetHierarchyPath()).transform.parent;
             GameObject newMesh = GameObject.Instantiate(mesh);
             newMesh.name = mesh.name;
+            newMesh.transform.parent = mesh.transform.parent;
+            newMesh.active = !newMesh.active;
             mesh.name = ignoreID; //destroying the game object doesn't instantly remove it unfortunately
             GameObject.Destroy(mesh, 0);
-            newMesh.transform.parent = MeshHider.transform;
-            MeshHider.active = !newMesh.active;
-            newMesh.active = !newMesh.active;
             CreateMeshToggleMenu(LeftExploreMenu, player, ignoreID);
         });
+    }
+    public static void AutoMeshToggle(string specificPlayer = null)
+    {
+        string[] hideKeywords = {"shirt", "pants", "socks", "bra", "panties", "garters", "hoodie", "tank", "shorts", "pasties", "sweater", "shoes", "skirt", "bandage", "dress", "strap", "scarf", "garter", "choker", "collar", "necklace", "bikini", "bodysuit", "top", "panty", "stocking", "harness", "turtleneck", "vans", "fishnet", "bag", "blous", "corset", "tights", "thong", "jeans", "fishnets", "jacket", "belt", "bunnysuit", "bottom","uniform", "underwear", "yamakaze", "cloth", "thighhigh", "skukumizu", "jacket", "parka", "stayhome"};
+        string[] showKeywords = {"penis", "cock", "dildo", "strap-on", "strapon", "skin", "nipple", "フタ", "dick", "xxx", "lewd", "18+", "sex", "boob", "nipless"};
+        var self = VRCPlayerApi.AllPlayers.Find((Il2CppSystem.Predicate<VRCPlayerApi>)(x => x.isLocal));
+        foreach (var player in VRCPlayerApi.AllPlayers)
+        {
+            if (player.displayName != self.displayName)
+            {
+                if (specificPlayer != null && player.displayName != specificPlayer) continue;
+                var ourSkinnedMeshes = GameObject.Find(player.gameObject.name + "/ForwardDirection/Avatar").GetComponentsInChildren<SkinnedMeshRenderer>(true);
+                var ourMeshes = GameObject.Find(player.gameObject.name + "/ForwardDirection/Avatar").GetComponentsInChildren<MeshRenderer>(true);
+                foreach (var skinnedMesh in ourSkinnedMeshes)
+                {
+                    foreach (string x in hideKeywords)
+                    {
+                        if (skinnedMesh.name.IndexOf(x, 0, StringComparison.OrdinalIgnoreCase) != -1)
+                        {
+                            try {
+                            GameObject newMesh = GameObject.Instantiate(skinnedMesh.gameObject);
+                            newMesh.name = skinnedMesh.name;
+                            newMesh.transform.parent = skinnedMesh.transform.parent;
+                            newMesh.active = newMesh.active = false;
+                            GameObject.Destroy(skinnedMesh.gameObject, 0);
+                            } catch{}
+                        }
+                    }
+                    foreach (string x in showKeywords)
+                    {
+                        if (skinnedMesh.name.IndexOf(x, 0, StringComparison.OrdinalIgnoreCase) != -1)
+                        {
+                            try {
+                            GameObject newMesh = GameObject.Instantiate(skinnedMesh.gameObject);
+                            newMesh.name = skinnedMesh.name;
+                            newMesh.transform.parent = skinnedMesh.transform.parent;
+                            newMesh.active = newMesh.active = true;
+                            GameObject.Destroy(skinnedMesh.gameObject, 0);
+                            } catch{}
+                        }
+                    }
+                }
+                foreach (var mesh in ourMeshes)
+                {
+                    foreach (string x in hideKeywords)
+                    {
+                        if (mesh.name.IndexOf(x, 0, StringComparison.OrdinalIgnoreCase) != -1)
+                        {
+                            try {
+                            GameObject newMesh = GameObject.Instantiate(mesh.gameObject);
+                            newMesh.name = mesh.name;
+                            newMesh.transform.parent = mesh.transform.parent;
+                            newMesh.active = newMesh.active = false;
+                            GameObject.Destroy(mesh.gameObject, 0);
+                            } catch{}
+                        }
+                    }
+                    foreach (string x in showKeywords)
+                    {
+                        if (mesh.name.IndexOf(x, 0, StringComparison.OrdinalIgnoreCase) != -1)
+                        {
+                            try {
+                            GameObject newMesh = GameObject.Instantiate(mesh.gameObject);
+                            newMesh.name = mesh.name;
+                            newMesh.transform.parent = mesh.transform.parent;
+                            newMesh.active = newMesh.active = true;
+                            GameObject.Destroy(mesh.gameObject, 0);
+                            } catch{}
+                        }
+                    }
+                }
+            }
+        }
+        
     }
     public static void CreatePickupMenu()
     {
         GameObject LeftExploreMenu = GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Left/Container/InnerContainer/Explore/ScrollRect/Viewport/VerticalLayoutGroup");
         ClearMenu(LeftExploreMenu);
         CreateButton("Back", LeftExploreMenu, CreateMainMenu);
+        if (Flight.spammedPlayer == null)
+            CreateButton("SPAM (Select a Player!)", LeftExploreMenu, CreatePickupMenu);
+        else if (Flight.propSpam)
+            CreateButton("SPAMMING! (" + Flight.spammedPlayer.displayName + ")", LeftExploreMenu, () => {
+                Flight.propSpam = !Flight.propSpam;
+                CreatePickupMenu();
+            });
+        else
+            CreateButton("SPAM (" + Flight.spammedPlayer.displayName + ")", LeftExploreMenu, () => {
+                Flight.propSpam = !Flight.propSpam;
+                CreatePickupMenu();
+            });
         CreateButton("Reload Player List", LeftExploreMenu, CreatePickupMenu);
         CreateSeparator(LeftExploreMenu);
-        var self = VRCPlayerApi.AllPlayers.Find((Il2CppSystem.Predicate<VRCPlayerApi>)(x => x.isLocal));
         foreach (var player in GetPlayersSorted())
         {
             CreateButton(player.displayName, LeftExploreMenu, () =>
             {
-                var pickups = UnityEngine.Object.FindObjectsOfType<VRC_Pickup>();
-                try {
-                    GameObject posObj = new GameObject();
-                    Destroy(posObj, 10f);
-                    foreach (var pickup in pickups) {
-                        if (pickup == null) continue;
-                        VRC.SDKBase.Networking.SetOwner(self, pickup.gameObject);
-                        Vector3 playerPosition = player.GetPosition();
-                        Vector3 targetRandomPosition = Random.onUnitSphere*(player.GetAvatarEyeHeightAsMeters()*0.75f);
-                        targetRandomPosition.x = targetRandomPosition.x + playerPosition.x;
-                        targetRandomPosition.y = targetRandomPosition.y + playerPosition.y + (player.GetAvatarEyeHeightAsMeters() / 2) + 0.4f;
-                        targetRandomPosition.z = targetRandomPosition.z + playerPosition.z;
-                        posObj.transform.position = targetRandomPosition;
-                        try {
-                            // if the map disables this we can do it anyway
-                            pickup.gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>().SetGravity(true);
-                            pickup.gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>().TeleportTo(posObj.transform);
-                        } catch {}
-                    }
-                }catch {
-                    foreach (var pickup in pickups) {
-                        if (pickup == null) continue;
-                        VRC.SDKBase.Networking.SetOwner(self, pickup.gameObject);
-                        try {
-                            // if the map disables this we can do it anyway
-                            pickup.gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>().SetGravity(true);
-                            pickup.gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>().TeleportTo(player.gameObject.transform);
-                        } catch {}
-                    }
-                }
+                Flight.spammedPlayer = player;
+                if (Flight.propSpam) return;
+                TeleportPickups(player);
             });
+        }
+    }
+    public static void TeleportPickups(VRCPlayerApi player)
+    {
+        var pickups = UnityEngine.Object.FindObjectsOfType<VRC_Pickup>();
+        var self = VRCPlayerApi.AllPlayers.Find((Il2CppSystem.Predicate<VRCPlayerApi>)(x => x.isLocal));
+        try {
+            GameObject posObj = new GameObject();
+            Destroy(posObj, 10f);
+            foreach (var pickup in pickups) {
+                if (pickup == null) continue;
+                VRC.SDKBase.Networking.SetOwner(self, pickup.gameObject);
+                Vector3 playerPosition = player.GetPosition();
+                Vector3 targetRandomPosition = UnityEngine.Random.onUnitSphere*(player.GetAvatarEyeHeightAsMeters()*0.75f);
+                targetRandomPosition.x = targetRandomPosition.x + playerPosition.x;
+                targetRandomPosition.y = targetRandomPosition.y + playerPosition.y + (player.GetAvatarEyeHeightAsMeters() / 2) + 0.4f;
+                targetRandomPosition.z = targetRandomPosition.z + playerPosition.z;
+                posObj.transform.position = targetRandomPosition;
+                try {
+                    // if the map disables this we can do it anyway
+                    pickup.gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>().SetGravity(true);
+                    pickup.gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>().TeleportTo(posObj.transform);
+                } catch {}
+            }
+        }catch {
+            foreach (var pickup in pickups) {
+                if (pickup == null) continue;
+                VRC.SDKBase.Networking.SetOwner(self, pickup.gameObject);
+                try {
+                    // if the map disables this we can do it anyway
+                    pickup.gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>().SetGravity(true);
+                    pickup.gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>().TeleportTo(player.gameObject.transform);
+                } catch {}
+            }
         }
     }
     public static void CreateCheatsMenu()
@@ -770,13 +874,13 @@ public class PluginComponent : MonoBehaviour
         GameObject myButton = GameObject.Instantiate(GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions/Button_GoHome"));
         myButton.name = "Button_" + System.Guid.NewGuid().ToString(); //Name the buttons something specific internally
         myButton.transform.SetParent(ButtonParent.transform, false);
-        myButton.GetComponent<MonoBehaviourPublicLi193Ob80VoBo93VoOnUnique>().enabled = false; //prevents the button from opening home menu dialog
+        myButton.GetComponent<MonoBehaviourPublicLi193VoBo93OnObVoOnUnique>().enabled = false; //prevents the button from opening home menu dialog
         GameObject.Find(myButton.name + "/Icons").active = false; //remove icon
         GameObject.Find(myButton.name + "TextLayoutParent/Text_H4").GetComponent<TextMeshProText>().prop_String_0 = buttonName;
         var ev = new UnityEngine.UI.Button.ButtonClickedEvent();
         var cb = (UnityAction)(System.Action)(() => buttonAction());
         ev.AddListener(cb);
-        myButton.GetComponent<ButtonPublicIMoveHandlerIEventSystemHandlerIPointerDownHandlerIPointerUpHandlerIPointerEnterHandlerIPointerExitHandlerISelectHandlerIDeselectHandlerSt_cBo_sObObStUnique>().onClick = ev;
+        myButton.GetComponent<ButtonPublicIMoveHandlerIEventSystemHandlerIPointerDownHandlerIPointerUpHandlerIPointerEnterHandlerIPointerExitHandlerISelectHandlerIDeselectHandlerOb_tIm_iStOb_t_sBo_dUnique>().onClick = ev;
         return myButton;
     }
     public static GameObject CreateSeparator(GameObject Parent, string text = "------------")

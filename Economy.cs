@@ -25,11 +25,7 @@ internal class Helper
 {
 	public static Il2CppReferenceArray<IProduct> GetAllProducts()
 	{
-		var products =
-			StoreManager.field_Public_Static_MonoBehaviourPublicObInObUnique_0
-			.field_Internal_ObjectPublic661ILDi2St200Li10_0.
-			field_Private_Dictionary_2_String_InterfacePublicAbstractIComparableIEquatable1ObfStObStBoOb1StTeInStUnique_0
-			.Values;
+		var products = StoreManager.field_Public_Static_MonoBehaviourPublicObInObUnique_0.field_Internal_ObjectPublic661ILDi2St740Li10_0.field_Private_Dictionary_2_String_InterfacePublicAbstractIComparableIEquatable1ObfStObStBoOb1StTeILStUnique_0.Values;
 		var iproducts = new Il2CppReferenceArray<IProduct>(products.Count);
 		var i = 0;
 		foreach (var product in products)
