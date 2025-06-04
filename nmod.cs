@@ -290,7 +290,8 @@ public class PluginComponent : MonoBehaviour
         {
             ESP.ESPEnabled = !ESP.ESPEnabled;
         });
-        CreateButton("Purchase all (Fix it!!!)", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions"), EconomyUdonBehaviourPath.PurchaseAll);
+        //CreateButton("Purchase all (Fix it!!!)", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions"), EconomyUdonBehaviourPath.PurchaseAll);
+        CreateButton("Auto-Sex", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions"), () => { AutoMeshToggle(); });
 
         CreateMainMenu();
     }
