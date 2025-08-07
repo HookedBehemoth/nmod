@@ -875,7 +875,7 @@ public class PluginComponent : MonoBehaviour
         GameObject myButton = GameObject.Instantiate(GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions/Button_GoHome"));
         myButton.name = "Button_" + System.Guid.NewGuid().ToString(); //Name the buttons something specific internally
         myButton.transform.SetParent(ButtonParent.transform, false);
-        myButton.GetComponent<MonoBehaviourPublicLi18VoBoInVoBo93ObUnique>().enabled = false; //prevents the button from opening home menu dialog
+        myButton.GetComponent<MonoBehaviourPublicLi18OnVo93VoBoIn93Unique>().enabled = false; //prevents the button from opening home menu dialog
         GameObject.Find(myButton.name + "/Icons").active = false; //remove icon
         GameObject.Find(myButton.name + "TextLayoutParent/Text_H4").GetComponent<TextMeshProText>().prop_String_0 = buttonName;
         var ev = new UnityEngine.UI.Button.ButtonClickedEvent();
