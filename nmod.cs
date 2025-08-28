@@ -31,7 +31,7 @@ using VRC.SDKBase;
 using ActionMenuDriver = MonoBehaviourPublicObGaObAc1ObAcBoCoObUnique;
 using ActionMenuOpener = MonoBehaviourPublicSiObSiCaBoSiAcObBo1Unique;
 using ActionMenuType = MonoBehaviourPublicSiObSiCaBoSiAcObBo1Unique.EnumNPublicSealedvaLeRi3vUnique;
-using SelectedOutline = MonoBehaviourPublicInLi1MeObInMeHaReMeUnique;
+using SelectedOutline = MonoBehaviourPublicInLi1MeHaInMeRe1MeUnique;
 using RoomManager = MonoBehaviourPublicBoApSiApBoObStApBo1Unique;
 using Il2CppSystem.Collections.Generic;
 using VRCMotionState = MonoBehaviourPublicLaSiBoSiChBoObVeBoSiUnique;
@@ -875,7 +875,7 @@ public class PluginComponent : MonoBehaviour
         GameObject myButton = GameObject.Instantiate(GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions/Button_GoHome"));
         myButton.name = "Button_" + System.Guid.NewGuid().ToString(); //Name the buttons something specific internally
         myButton.transform.SetParent(ButtonParent.transform, false);
-        myButton.GetComponent<MonoBehaviourPublicLi18Vo93BoVo93OnObUnique>().enabled = false; //prevents the button from opening home menu dialog
+        myButton.GetComponent<MonoBehaviourPublicLi18VoBo93VoInOb93Unique>().enabled = false; //prevents the button from opening home menu dialog
         GameObject.Find(myButton.name + "/Icons").active = false; //remove icon
         GameObject.Find(myButton.name + "TextLayoutParent/Text_H4").GetComponent<TextMeshProText>().prop_String_0 = buttonName;
         var ev = new UnityEngine.UI.Button.ButtonClickedEvent();
