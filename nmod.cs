@@ -35,7 +35,7 @@ using SelectedOutline = MonoBehaviourPublicInLi1MeHaInMeRe1MeUnique;
 using RoomManager = MonoBehaviourPublicBoApSiApBoObStApBo1Unique;
 using Il2CppSystem.Collections.Generic;
 using VRCMotionState = MonoBehaviourPublicLaSiBoSiChBoObVeBoSiUnique;
-using TextMeshProText = TextMeshProUGUIPublicLo_lLa_c1InLoStInLoUnique;
+using TextMeshProText = TextMeshProUGUIPublicLo_lLa_cBoOb_c_p1InUnique;
 using UnityEngine.Playables;
 
 namespace NMod;
