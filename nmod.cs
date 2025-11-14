@@ -276,22 +276,30 @@ public class PluginComponent : MonoBehaviour
         while (GameObject.Find("Canvas_MainMenu(Clone)/Container/Wing_Right") == null)
             yield return new WaitForSeconds(1f);
 
-        CreateButton("Flight", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions"), () =>
+        GameObject flightButton = CreateButton("Flight", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide"), () =>
         {
             Flight.FlightEnabled = !Flight.FlightEnabled;
             if (Flight.FlightEnabled == false) Flight.NoclipEnabled = false;
         });
-        CreateButton("Noclip", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions"), () =>
+        flightButton.transform.localPosition = new Vector3(-300, -300, 0);
+
+        GameObject noclipButton = CreateButton("Noclip", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide"), () =>
         {
             Flight.NoclipEnabled = !Flight.NoclipEnabled;
             if (Flight.FlightEnabled == false) Flight.NoclipEnabled = false;
         });
-        CreateButton("ESP", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions"), () =>
+        noclipButton.transform.localPosition = new Vector3(0, -300, 0);
+
+        GameObject espButton = CreateButton("ESP", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide"), () =>
         {
             ESP.ESPEnabled = !ESP.ESPEnabled;
         });
-        //CreateButton("Purchase all (Fix it!!!)", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions"), EconomyUdonBehaviourPath.PurchaseAll);
-        CreateButton("Auto-Sex", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions"), () => { AutoMeshToggle(); });
+        espButton.transform.localPosition = new Vector3(300, -300, 0);
+
+        //CreateButton("Purchase all (Fix it!!!)", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A"), EconomyUdonBehaviourPath.PurchaseAll);
+
+        GameObject autosexButton = CreateButton("Auto-Sex", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide"), () => { AutoMeshToggle(); });
+        autosexButton.transform.localPosition = new Vector3(0, -500, 0);
 
         CreateMainMenu();
     }
@@ -334,8 +342,8 @@ public class PluginComponent : MonoBehaviour
         CreateButton("Toggles", LeftExploreMenu, TogglesMenu);
 
         //Useless fluff at the bottom so we don't stop execution if the game gets updated and shit breaks
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = VM.menuText.Value + " v" + MyPluginInfo.PLUGIN_VERSION;
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().color = new Color(255, 0, 0, 255);
+        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = VM.menuText.Value + " v" + MyPluginInfo.PLUGIN_VERSION;
+        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().color = new Color(255, 0, 0, 255);
         GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/Explore/WngHeader_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = "Teleport";
         GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Explore/Container/Text_QM_H3").GetComponent<TextMeshProText>().prop_String_0 = "Teleport";
         GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Left/Container/InnerContainer/Explore/WngHeader_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = "Elite Hacks";
@@ -872,7 +880,7 @@ public class PluginComponent : MonoBehaviour
     }
     public static GameObject CreateButton(string buttonName, GameObject ButtonParent, System.Action buttonAction)
     {
-        GameObject myButton = GameObject.Instantiate(GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions/Button_GoHome"));
+        GameObject myButton = GameObject.Instantiate(GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide/Button_Avatars/"));
         myButton.name = "Button_" + System.Guid.NewGuid().ToString(); //Name the buttons something specific internally
         myButton.transform.SetParent(ButtonParent.transform, false);
         GameObject.Destroy(myButton.GetComponents<Component>()[^1]); //prevents the button from opening home menu dialog. It's always last on the list of components, at least I assume!
