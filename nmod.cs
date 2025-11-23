@@ -281,27 +281,69 @@ public class PluginComponent : MonoBehaviour
             Flight.FlightEnabled = !Flight.FlightEnabled;
             if (Flight.FlightEnabled == false) Flight.NoclipEnabled = false;
         });
-        flightButton.transform.localPosition = new Vector3(-300, -300, 0);
 
         GameObject noclipButton = CreateButton("Noclip", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide"), () =>
         {
             Flight.NoclipEnabled = !Flight.NoclipEnabled;
             if (Flight.FlightEnabled == false) Flight.NoclipEnabled = false;
         });
-        noclipButton.transform.localPosition = new Vector3(0, -300, 0);
 
         GameObject espButton = CreateButton("ESP", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide"), () =>
         {
             ESP.ESPEnabled = !ESP.ESPEnabled;
         });
-        espButton.transform.localPosition = new Vector3(300, -300, 0);
 
         //CreateButton("Purchase all (Fix it!!!)", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A"), EconomyUdonBehaviourPath.PurchaseAll);
 
         GameObject autosexButton = CreateButton("Auto-Sex", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide"), () => { AutoMeshToggle(); });
-        autosexButton.transform.localPosition = new Vector3(0, -500, 0);
 
         CreateMainMenu();
+
+        //Apply layouts
+        flightButton.transform.localPosition = new Vector3(-379, -71, 0);
+        noclipButton.transform.localPosition = new Vector3(-127, -71, 0);
+        espButton.transform.localPosition = new Vector3(125, -71, 0);
+        autosexButton.transform.localPosition = new Vector3(378, -71, 0);
+        try
+        {
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide/Button_Shop").SetActive(false);
+            //GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide/Button_LiveNow").SetActive(false);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide/Button_Worlds").transform.localPosition = new Vector3(-379, 102, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide/Button_Avatars").transform.localPosition = new Vector3(-127, 102, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide/Button_Social").transform.localPosition = new Vector3(125, 102, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide/Button_ViewGroups").transform.localPosition = new Vector3(378, 102, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = VM.menuText.Value + " v" + MyPluginInfo.PLUGIN_VERSION;
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().color = new Color(255, 0, 0, 255);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/LeftItemContainer/Text_Title").transform.localPosition = new Vector3(-43, 0, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/RightItemContainer/Button_QM_Calendar").transform.localPosition = new Vector3(-211, 0, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/RightItemContainer/Button_QM_Inventory").transform.localPosition = new Vector3(-139, 0, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/RightItemContainer/Button_QM_Report").transform.localPosition = new Vector3(-64, 0, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/RightItemContainer/Button_QM_Expand").transform.localPosition = new Vector3(8, 0, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/Explore/WngHeader_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = "Teleport";
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Explore/Container/Text_QM_H3").GetComponent<TextMeshProText>().prop_String_0 = "Teleport";
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Left/Container/InnerContainer/Explore/WngHeader_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = "Elite Hacks";
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Left/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Explore/Container/Text_QM_H3").GetComponent<TextMeshProText>().prop_String_0 = "Elite Hacks";
+            //Big menu wings are stupid and useless and I'm not adding buttons to the menus twice
+            GameObject.Find("Canvas_MainMenu(Clone)/Container/Wing_Right").active = false;
+            GameObject.Find("Canvas_MainMenu(Clone)/Container/Wing_Left").active = false;
+        } catch {}
+
+        //Wait for wing menus and reload menu when they exist
+        int i = 0;
+        while (true) {
+            if (GameObject.Find("Wing_Right/Container/InnerContainer/Explore/ScrollRect/Viewport/VerticalLayoutGroup/Cell_Wing_Explore_HelpArticle(Clone)")) {
+                CreateMainMenu();
+                i++;
+            }
+            if (GameObject.Find("Wing_Left/Container/InnerContainer/Explore/ScrollRect/Viewport/VerticalLayoutGroup/Cell_Wing_Explore_HelpArticle(Clone)")) {
+                CreateMainMenu();
+                i++;
+            }
+            if (i == 2) break;
+            yield return new WaitForSeconds(1f);
+        }
+
+        VM.Logger.LogInfo("NMod fully Loaded!");
     }
     private static System.Collections.IEnumerator SpamPropsOnPlayer()
     {
@@ -340,17 +382,6 @@ public class PluginComponent : MonoBehaviour
         CreateButton("Sticky Stuckle", LeftExploreMenu, CreateStickyMenu);
         CreateButton("Pickups", LeftExploreMenu, CreatePickupMenu);
         CreateButton("Toggles", LeftExploreMenu, TogglesMenu);
-
-        //Useless fluff at the bottom so we don't stop execution if the game gets updated and shit breaks
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = VM.menuText.Value + " v" + MyPluginInfo.PLUGIN_VERSION;
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().color = new Color(255, 0, 0, 255);
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/Explore/WngHeader_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = "Teleport";
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Explore/Container/Text_QM_H3").GetComponent<TextMeshProText>().prop_String_0 = "Teleport";
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Left/Container/InnerContainer/Explore/WngHeader_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = "Elite Hacks";
-        GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Left/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Explore/Container/Text_QM_H3").GetComponent<TextMeshProText>().prop_String_0 = "Elite Hacks";
-        //Big menu wings are stupid and useless and I'm not adding buttons to the menus twice
-        GameObject.Find("Canvas_MainMenu(Clone)/Container/Wing_Right").active = false;
-        GameObject.Find("Canvas_MainMenu(Clone)/Container/Wing_Left").active = false;
     }
     public static void ClearMenu(GameObject ourMenu)
     {
