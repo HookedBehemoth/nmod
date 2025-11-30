@@ -181,7 +181,22 @@ public class PluginComponent : MonoBehaviour
                     }
                     if (!driver.GetRightOpener().isOpen())
                     {
+                        // at least one of these seems to work when forced on Desktop mode with a gamepad (gamesir tarantula pro)
                         val2 += new Vector3(0f, Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") * num);
+                        val2 += new Vector3(0f, Input.GetAxis("secondary2DAxis") * num); // OpenXR spec
+                        val2 += new Vector3(0f, Input.GetAxis("Axis4") * num); // InputManager Gamepad spec
+                        val2 += new Vector3(0f, Input.GetAxis("Up") * num); // InputManager spec
+                        try {
+                            Vector2 secondaryAxisValue;
+                            var rightHandDevices = new List<UnityEngine.XR.InputDevice>();
+                            UnityEngine.XR.InputDevices.GetDevicesAtXRNode(UnityEngine.XR.XRNode.LeftHand, rightHandDevices);
+                            UnityEngine.XR.InputDevice device = rightHandDevices[0];
+                            if (device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondary2DAxis, out secondaryAxisValue))
+                            {
+                                Debug.Log("secondaryAxisValue:" + secondaryAxisValue.ToString());
+                                val2 += new Vector3(0f, secondaryAxisValue.y);
+                            }
+                        } catch {}
                     }
                 }
                 else
@@ -276,26 +291,30 @@ public class PluginComponent : MonoBehaviour
         while (GameObject.Find("Canvas_MainMenu(Clone)/Container/Wing_Right") == null)
             yield return new WaitForSeconds(1f);
 
-        GameObject flightButton = CreateButton("Flight", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide"), () =>
+        GameObject ourLocation = null;
+        try {ourLocation = GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide");}
+        catch {ourLocation = GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_B/LayoutGuide");}
+        
+        GameObject flightButton = CreateButton("Flight", ourLocation, () =>
         {
             Flight.FlightEnabled = !Flight.FlightEnabled;
             if (Flight.FlightEnabled == false) Flight.NoclipEnabled = false;
         });
 
-        GameObject noclipButton = CreateButton("Noclip", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide"), () =>
+        GameObject noclipButton = CreateButton("Noclip", ourLocation, () =>
         {
             Flight.NoclipEnabled = !Flight.NoclipEnabled;
             if (Flight.FlightEnabled == false) Flight.NoclipEnabled = false;
         });
 
-        GameObject espButton = CreateButton("ESP", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide"), () =>
+        GameObject espButton = CreateButton("ESP", ourLocation, () =>
         {
             ESP.ESPEnabled = !ESP.ESPEnabled;
         });
 
         //CreateButton("Purchase all (Fix it!!!)", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A"), EconomyUdonBehaviourPath.PurchaseAll);
 
-        GameObject autosexButton = CreateButton("Auto-Sex", GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide"), () => { AutoMeshToggle(); });
+        GameObject autosexButton = CreateButton("Auto-Sex", ourLocation, () => { AutoMeshToggle(); });
 
         CreateMainMenu();
 
@@ -326,7 +345,28 @@ public class PluginComponent : MonoBehaviour
             //Big menu wings are stupid and useless and I'm not adding buttons to the menus twice
             GameObject.Find("Canvas_MainMenu(Clone)/Container/Wing_Right").active = false;
             GameObject.Find("Canvas_MainMenu(Clone)/Container/Wing_Left").active = false;
-        } catch {}
+        } catch {
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_B/LayoutGuide/Button_Shop").SetActive(false);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_B/LayoutGuide/Button_LiveNow").SetActive(false);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_B/LayoutGuide/Button_Worlds").transform.localPosition = new Vector3(-379, 102, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_B/LayoutGuide/Button_Avatars").transform.localPosition = new Vector3(-127, 102, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_B/LayoutGuide/Button_Social").transform.localPosition = new Vector3(125, 102, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_B/LayoutGuide/Button_ViewGroups").transform.localPosition = new Vector3(378, 102, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = VM.menuText.Value + " v" + MyPluginInfo.PLUGIN_VERSION;
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().color = new Color(255, 0, 0, 255);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/LeftItemContainer/Text_Title").transform.localPosition = new Vector3(-43, 0, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/RightItemContainer/Button_QM_Calendar").transform.localPosition = new Vector3(-211, 0, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/RightItemContainer/Button_QM_Inventory").transform.localPosition = new Vector3(-139, 0, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/RightItemContainer/Button_QM_Report").transform.localPosition = new Vector3(-64, 0, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/Header_H1/RightItemContainer/Button_QM_Expand").transform.localPosition = new Vector3(8, 0, 0);
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/Explore/WngHeader_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = "Teleport";
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Right/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Explore/Container/Text_QM_H3").GetComponent<TextMeshProText>().prop_String_0 = "Teleport";
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Left/Container/InnerContainer/Explore/WngHeader_H1/LeftItemContainer/Text_Title").GetComponent<TextMeshProText>().prop_String_0 = "Elite Hacks";
+            GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/Wing_Left/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Explore/Container/Text_QM_H3").GetComponent<TextMeshProText>().prop_String_0 = "Elite Hacks";
+            //Big menu wings are stupid and useless and I'm not adding buttons to the menus twice
+            GameObject.Find("Canvas_MainMenu(Clone)/Container/Wing_Right").active = false;
+            GameObject.Find("Canvas_MainMenu(Clone)/Container/Wing_Left").active = false;
+        }
 
         //Wait for wing menus and reload menu when they exist
         int i = 0;
@@ -911,7 +951,9 @@ public class PluginComponent : MonoBehaviour
     }
     public static GameObject CreateButton(string buttonName, GameObject ButtonParent, System.Action buttonAction)
     {
-        GameObject myButton = GameObject.Instantiate(GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide/Button_Avatars/"));
+        GameObject myButton = null;
+        try {myButton = GameObject.Instantiate(GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_A/LayoutGuide/Button_Avatars/"));}
+        catch {myButton = GameObject.Instantiate(GameObject.Find("Canvas_QuickMenu(Clone)/CanvasGroup/Container/Window/QMParent/Menu_QM_Launchpad/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickLinks_B/LayoutGuide/Button_Avatars/"));}
         myButton.name = "Button_" + System.Guid.NewGuid().ToString(); //Name the buttons something specific internally
         myButton.transform.SetParent(ButtonParent.transform, false);
         GameObject.Destroy(myButton.GetComponents<Component>()[^1]); //prevents the button from opening home menu dialog. It's always last on the list of components, at least I assume!
