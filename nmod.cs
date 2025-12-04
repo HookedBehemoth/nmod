@@ -183,9 +183,9 @@ public class PluginComponent : MonoBehaviour
                     {
                         // at least one of these seems to work when forced on Desktop mode with a gamepad (gamesir tarantula pro)
                         val2 += new Vector3(0f, Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") * num);
-                        val2 += new Vector3(0f, Input.GetAxis("secondary2DAxis") * num); // OpenXR spec
-                        val2 += new Vector3(0f, Input.GetAxis("Axis4") * num); // InputManager Gamepad spec
-                        val2 += new Vector3(0f, Input.GetAxis("Up") * num); // InputManager spec
+                        // val2 += new Vector3(0f, Input.GetAxis("secondary2DAxis") * num); // OpenXR spec
+                        // val2 += new Vector3(0f, Input.GetAxis("Axis4") * num); // InputManager Gamepad spec
+                        // val2 += new Vector3(0f, Input.GetAxis("Up") * num); // InputManager spec
                         try {
                             Vector2 secondaryAxisValue;
                             var rightHandDevices = new List<UnityEngine.XR.InputDevice>();
@@ -270,7 +270,7 @@ public class PluginComponent : MonoBehaviour
                 }
 
                 var xrDisplaySubsystems = new List<XRDisplaySubsystem>();
-                SubsystemManager.GetInstances(xrDisplaySubsystems);
+                SubsystemManager.GetSubsystems(xrDisplaySubsystems);
                 foreach (var xrDisplay in xrDisplaySubsystems)
                 {
                     if (xrDisplay.running)
@@ -725,7 +725,7 @@ public class PluginComponent : MonoBehaviour
     }
     public static void TeleportPickups(VRCPlayerApi player)
     {
-        var pickups = UnityEngine.Object.FindObjectsOfType<VRC_Pickup>();
+        var pickups = FindObjectsByType<VRC_Pickup>(FindObjectsSortMode.None);
         var self = VRCPlayerApi.AllPlayers.Find((Il2CppSystem.Predicate<VRCPlayerApi>)(x => x.isLocal));
         try {
             GameObject posObj = new GameObject();
@@ -745,7 +745,7 @@ public class PluginComponent : MonoBehaviour
                     pickup.gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>().TeleportTo(posObj.transform);
                 } catch {}
             }
-        }catch {
+        } catch {
             foreach (var pickup in pickups) {
                 if (pickup == null) continue;
                 VRC.SDKBase.Networking.SetOwner(self, pickup.gameObject);
